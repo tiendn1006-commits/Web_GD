@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://tiendn1006-commits.github.io/Web_TTGD",
+  "homepage": "https://tiendn1006-commits.github.io/Web_GD",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Discover Your Future",
+    "subtitle": "With Us",
+    "description": "Leading education platform with 100+ high-quality courses to help you develop skills and achieve career goals.",
+    "cta": "Explore Now",
+    "students": "Students",
+    "courses": "Courses",
+    "instructors": "Instructors"
+  },
+  "about": {
+    "title": "About Us",
+    "description": "We are a leading online education platform committed to delivering high-quality courses with experienced instructors.",
+    "mission": "Our mission is to make education accessible and effective for everyone."
+  },
+  "courses": {
+    "title": "Featured Courses",
+    "subtitle": "Discover our most popular courses",
+    "viewAll": "View All",
+    "students": "students",
+    "lessons": "lessons",
+    "register": "Register Now"
+  },
+  "testimonials": {
+    "title": "What Our Students Say",
+    "subtitle": "Real feedback from our students"
+  },
+  "registration": {
+    "title": "Course Registration",
+    "subtitle": "Fill in your information for free consultation",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "course": "Course of Interest",
+    "selectCourse": "Select a course",
+    "submit": "Register Now",
+    "submitting": "Processing...",
+    "success": "Registration Successful!",
+    "successMessage": "We will contact you as soon as possible.",
+    "errors": {
+      "fullNameRequired": "Please enter your full name",
+      "fullNameMin": "Full name must be at least 2 characters",
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Invalid email address",
+      "phoneRequired": "Please enter your phone number",
+      "phoneInvalid": "Phone number must be 10 digits",
+      "courseRequired": "Please select a course"
+    }
+  },
+  "footer": {
+    "description": "Vietnam's leading online education platform",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "followUs": "Follow Us",
+    "copyright": "© 2026 EduPlatform. All rights reserved."
+  }
+}

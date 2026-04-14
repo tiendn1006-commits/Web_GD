@@ -4,7 +4,7 @@ import './i18n/index.js';
 
 function App() {
   return (
-    <BrowserRouter basename="/Web_TTGD">
+    <BrowserRouter basename="/Web_GD">
       <Routes>
         <Route path="/" element={<LandingPage />} />
       </Routes>

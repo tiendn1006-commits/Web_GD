@@ -4,6 +4,7 @@ import { Hero } from '../components/Hero';
 import { About } from '../components/About';
 import { CoursesList } from '../components/CoursesList';
 import { Testimonials } from '../components/Testimonials';
+import { ContactForm } from '../components/ContactForm';
 import { Footer } from '../components/Footer';
 import { Modal } from '../../../components/Modal';
 import { RegistrationForm } from '../components/RegistrationForm';
@@ -29,6 +30,7 @@ export const LandingPage = () => {
       <About />
       <CoursesList onRegisterClick={handleRegisterClick} />
       <Testimonials />
+      <ContactForm />
       <Footer />
 
       <Modal

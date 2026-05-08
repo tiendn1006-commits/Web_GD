@@ -1,0 +1,458 @@
+import fs from 'fs';
+
+const testimonials = `import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, Quote, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Card } from '../../../components/Card';
+
+export const Testimonials = () => {
+  const { t } = useTranslation();
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setTestimonials([
+      { id: 1, name: 'Nguyen Van A', role: 'Frontend Developer', content: 'Khoa hoc rat bo ich.', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Nguyen+Van+A&background=14B8A6&color=fff' },
+      { id: 2, name: 'Tran Thi B', role: 'UI/UX Designer', content: 'Chuong trinh hoc rat khoa hoc.', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Tran+Thi+B&background=D4AF37&color=fff' },
+      { id: 3, name: 'Le Van C', role: 'Full-stack Developer', content: 'Sau khoa hoc toi da tu tin hon.', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Le+Van+C&background=1E3A5F&color=fff' }
+    ]);
+    setLoading(false);
+  }, []);
+
+  if (loading) return (
+    <section className="py-24 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-12 h-12 animate-spin text-teal-600 mx-auto mb-4" />
+        </div>
+    </section>
+  );
+
+  return (
+    <section className="py-24 bg-white relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="absolute top-40 right-0 w-80 h-80 bg-gold-100/50 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-0 w-80 h-80 bg-teal-100/50 rounded-full blur-3xl" />
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+          <motion.span initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ type: 'spring', stiffness: 200 }} className="inline-flex items-center gap-2 px-4 py-2 bg-gold-50 border border-gold-200 text-gold-700 rounded-full text-sm font-semibold mb-6">
+            <Quote className="w-4 h-4" /> Danh gia
+          </motion.span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+            <span className="text-gradient">{t('testimonials.title')}</span>
+          </h2>
+          <p className="text-lg text-slate-500">{t('testimonials.subtitle')}</p>
+        </motion.div>
+
+        <div className="hidden md:grid md:grid-cols-3 gap-8 items-start">
+          {testimonials.map((item, index) => (
+            <motion.div key={item.id} initial={{ opacity: 0, y: 60, rotate: index === 0 ? -2 : index === 2 ? 2 : 0 }} whileInView={{ opacity: 1, y: 0, rotate: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2, duration: 0.7, type: 'spring', stiffness: 80 }} whileHover={{ y: -10, scale: 1.02 }} style={{ marginTop: index === 1 ? '2rem' : 0 }}>
+              <Card variant="glass" className="h-full" hover={false}>
+                <div className="p-6">
+                  <motion.div initial={{ rotate: -20, scale: 0 }} whileInView={{ rotate: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.2 + 0.3, type: 'spring' }}>
+                    <Quote className="w-10 h-10 text-teal-200 mb-4" />
+                  </motion.div>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(item.rating)].map((_, i) => (
+                      <motion.div key={i} initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.2 + 0.4 + i * 0.05, type: 'spring' }}>
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.2 + 0.5 }} className="text-slate-600 mb-6 leading-relaxed text-[15px]">
+                    &ldquo;{item.content}&rdquo;
+                  </motion.p>
+                  <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.2 + 0.6 }} className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                    <div className="relative">
+                      <img src={item.avatar} alt={item.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-teal-100" />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center border-2 border-white">
+                        <Star className="w-3 h-3 text-white fill-white" />
+                      </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-800">{item.name}</h4>
+                      <p className="text-sm text-slate-500">{item.role}</p>
+                    </div>
+                  </motion.div>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="md:hidden">
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div key={activeIndex} initial={{ opacity: 0, x: 60, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} exit={{ opacity: 0, x: -60, scale: 0.95 }} transition={{ duration: 0.4, type: 'spring', stiffness: 100 }}>
+                <Card variant="glass" hover={false}>
+                  <div className="p-6">
+                    <Quote className="w-8 h-8 text-teal-200 mb-4" />
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(testimonials[activeIndex]?.rating || 5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                    </div>
+                    <p className="text-slate-600 mb-6">&ldquo;{testimonials[activeIndex]?.content}&rdquo;</p>
+                    <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                      <img src={testimonials[activeIndex]?.avatar} alt="" className="w-12 h-12 rounded-full object-cover ring-2 ring-teal-100" />
+                      <div>
+                        <h4 className="font-semibold text-slate-800">{testimonials[activeIndex]?.name}</h4>
+                        <p className="text-sm text-slate-500">{testimonials[activeIndex]?.role}</p>
+                      </div>
+                  </div>
+                </Card>
+              </motion.div>
+            </AnimatePresence>
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <button onClick={() => setActiveIndex(p => p === 0 ? testimonials.length - 1 : p - 1)} className="p-2 rounded-full bg-slate-50 border border-slate-200 hover:bg-teal-50 transition-colors">
+                <ChevronLeft className="w-5 h-5 text-slate-600" />
+              </button>
+              <div className="flex gap-2">
+                {testimonials.map((_, i) => (
+                  <button key={i} onClick={() => setActiveIndex(i)} className={"w-2 h-2 rounded-full transition-all " + (i === activeIndex ? "bg-teal-500 w-6" : "bg-slate-300")} />
+                ))}
+              </div>
+              <button onClick={() => setActiveIndex(p => p === testimonials.length - 1 ? 0 : p + 1)} className="p-2 rounded-full bg-slate-50 border border-slate-200 hover:bg-teal-50 transition-colors">
+                <ChevronRight className="w-5 h-5 text-slate-600" />
+              </button>
+            </div>
+        </div>
+    </section>
+  );
+};
+`;
+
+fs.writeFileSync('src/features/Home/components/Testimonials.jsx', testimonials);
+console.log('Testimonials done');
+
+const footer = `import { Mail, Phone, MapPin, GraduationCap, ArrowUpRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+
+export const Footer = () => {
+  const { t } = useTranslation();
+
+  return (
+    <footer id="contact" className="bg-slate-900 text-white relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-teal-500/10 rounded-full blur-3xl" />
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="py-16 grid md:grid-cols-2 lg:grid-cols-5 gap-12">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-6">
+              <motion.div whileHover={{ rotate: 360, scale: 1.1 }} transition={{ duration: 0.6 }} className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-navy-600 flex items-center justify-center">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </motion.div>
+              <span className="text-xl font-bold">EduPlatform</span>
+            </div>
+            <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
+              Nen tang giao duc truc tuyen hang dau Viet Nam.
+            </p>
+            <div className="flex gap-3">
+              {['facebook','twitter','instagram','youtube'].map((social, i) => (
+                <motion.a key={social} href={'https://' + social + '.com'} target="_blank" rel="noopener noreferrer" initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1, type: 'spring' }} whileHover={{ y: -4, scale: 1.15 }} className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-teal-600 flex items-center justify-center transition-colors border border-slate-700 hover:border-teal-500">
+                  <span className="capitalize text-xs font-medium text-white">{social[0]}</span>
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+
+          {[
+            { title: 'Lien ket nhanh', links: [{l:'Trang chu',h:'#home'},{l:'Khoa hoc',h:'#courses'},{l:'Gioi thieu',h:'#about'},{l:'Lien he',h:'#contact-form'}] },
+            { title: 'Khoa hoc', links: [{l:'Lap trinh Web',h:'#courses'},{l:'Digital Marketing',h:'#courses'},{l:'UI/UX Design',h:'#courses'},{l:'Data Science',h:'#courses'}] }
+          ].map((col, ci) => (
+            <motion.div key={col.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: ci * 0.1 + 0.2, duration: 0.6 }}>
+              <h4 className="font-semibold mb-5 text-sm uppercase tracking-wider text-slate-300">{col.title}</h4>
+              <ul className="space-y-3">
+                {col.links.map(link => (
+                  <li key={link.l}>
+                    <a href={link.h} className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-1 group">
+                      {link.l}
+                      <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4, duration: 0.6 }}>
+            <h4 className="font-semibold mb-5 text-sm uppercase tracking-wider text-slate-300">Lien he</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-teal-500 mt-0.5 flex-shrink-0" />
+                <span className="text-slate-400 text-sm">contact@eduplatform.vn</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Phone className="w-5 h-5 text-teal-500 mt-0.5 flex-shrink-0" />
+                <span className="text-slate-400 text-sm">1900 xxxx</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-teal-500 mt-0.5 flex-shrink-0" />
+                <span className="text-slate-400 text-sm">123 Duong ABC, Quan 1, TP.HCM</span>
+              </li>
+            </ul>
+          </motion.div>
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="border-t border-slate-800 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h4 className="font-semibold mb-1">Dang ky nhan tin</h4>
+              <p className="text-sm text-slate-400">Nhan thong tin ve khoa hoc va uu dai moi nhat</p>
+            </div>
+            <div className="flex gap-2 w-full md:w-auto">
+              <input type="email" placeholder="Nhap email cua ban" className="px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors flex-1 md:w-64" />
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold hover:shadow-lg hover:shadow-teal-500/20 transition-all whitespace-nowrap">
+                Dang ky
+              </motion.button>
+            </div>
+        </motion.div>
+
+        <div className="border-t border-slate-800 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-slate-500 text-sm">{t('footer.copyright')}</p>
+          <div className="flex gap-6 text-sm text-slate-500">
+            <a href="#" className="hover:text-slate-300 transition-colors">Chinh sach bao mat</a>
+            <a href="#" className="hover:text-slate-300 transition-colors">Dieu khoan</a>
+            <a href="#" className="hover:text-slate-300 transition-colors">Cookies</a>
+          </div>
+      </div>
+    </footer>
+  );
+};
+`;
+
+fs.writeFileSync('src/features/Home/components/Footer.jsx', footer);
+console.log('Footer done');
+
+const contact = `import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, CheckCircle2, Loader2, User, Mail, Phone, MessageSquare, Baby, Clock, Gift, GraduationCap, Heart, Target } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '../../../components/Button';
+
+const schema = z.object({
+  parentName: z.string().min(1, 'Vui long nhap ho ten').min(2, 'Toi thieu 2 ky tu'),
+  childName: z.string().min(1, 'Vui long nhap ten con').min(2, 'Toi thieu 2 ky tu'),
+  email: z.string().min(1, 'Vui long nhap email').email('Email khong hop le'),
+  phone: z.string().min(1, 'Vui long nhap SDT').regex(/^[0-9]{10}$/, 'SDT phai co 10 chu so'),
+  message: z.string().min(1, 'Vui long nhap noi dung').min(10, 'Toi thieu 10 ky tu')
+});
+
+export const ContactForm = () => {
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { parentName: '', childName: '', email: '', phone: '', message: '' }
+  });
+
+  const onSubmit = async (data) => {
+    setIsLoading(true); setError(null);
+    try {
+      const API_URL = process.env.NODE_ENV === 'production' ? 'https://your-backend-url.com/api/contact' : 'http://localhost:5000/api/contact';
+      const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Loi');
+      setIsSuccess(true); reset(); setTimeout(() => setIsSuccess(false), 5000);
+    } catch (err) {
+      setError(err.message === 'Failed to fetch' ? 'Backend chua duoc deploy.' : (err.message || 'Loi'));
+    } finally { setIsLoading(false); }
+  };
+
+  const benefits = [
+    { icon: Target, title: 'Tu van mien phi', desc: 'Doi ngu chuyen gia tu van nhiet tinh', color: 'from-teal-400 to-teal-500' },
+    { icon: Clock, title: 'Phan hoi nhanh', desc: 'Lien he trong vong 24h', color: 'from-blue-400 to-blue-500' },
+    { icon: GraduationCap, title: 'Chuong trinh phu hop', desc: 'Thiet ke rieng cho tung do tuoi', color: 'from-violet-400 to-violet-500' },
+    { icon: Gift, title: 'Uu dai dac biet', desc: 'Giam gia cho khach dang ky som', color: 'from-gold-400 to-gold-500' }
+  ];
+
+  const inputClass = (hasError) => 'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 outline-none placeholder:text-slate-400 ' +
+    (hasError ? 'border-coral-300 focus:border-coral-500 focus:ring-4 focus:ring-coral-500/10 bg-coral-50/30' : 'border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 hover:border-slate-300');
+
+  return (
+    <section id="contact-form" className="py-24 bg-slate-50 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid opacity-40" />
+      <div className="absolute top-20 right-0 w-96 h-96 bg-teal-100/50 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-0 w-96 h-96 bg-gold-100/50 rounded-full blur-3xl" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <motion.span initial={{ scale: 0.8, opacity: 0, rotate: -10 }} whileInView={{ scale: 1, opacity: 1, rotate: 0 }} viewport={{ once: true }} transition={{ type: 'spring', stiffness: 200 }} className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-sm font-semibold mb-6">
+              <Heart className="w-4 h-4" /> Lien He Tu Van
+            </motion.span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+              <span className="text-gradient">Dang Ky Tu Van Mien Phi</span>
+            </h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">De lai thong tin, chung toi se lien he tu van chi tiet</p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, type: 'spring', stiffness: 80 }} className="space-y-4">
+              {benefits.map((item, index) => (
+                <motion.div key={index} initial={{ opacity: 0, x: -40, scale: 0.95 }} whileInView={{ opacity: 1, x: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.12, type: 'spring', stiffness: 100 }} whileHover={{ x: 6, scale: 1.02 }} className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-slate-100 hover:border-teal-200 hover:shadow-lg transition-all">
+                  <motion.div whileHover={{ rotate: 360, scale: 1.15 }} transition={{ duration: 0.5 }} className={'w-12 h-12 rounded-xl bg-gradient-to-br ' + item.color + ' flex items-center justify-center shadow-lg flex-shrink-0'}>
+                    <item.icon className="w-6 h-6 text-white" />
+                  </motion.div>
+                  <div>
+                    <h4 className="font-semibold text-slate-800 mb-1">{item.title}</h4>
+                    <p className="text-sm text-slate-500">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+
+              <motion.div initial={{ opacity: 0, y: 30, scale: 0.9 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.5, type: 'spring' }} className="rounded-2xl p-6 bg-gradient-to-br from-navy-600 to-navy-700 text-white relative overflow-hidden">
+                <motion.div animate={{ x: [0, 20, 0], y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity }} className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
+                <div className="relative z-10 flex items-center gap-4">
+                  <motion.div whileHover={{ rotate: 20, scale: 1.2 }} className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center border border-white/20">
+                    <Gift className="w-6 h-6 text-gold-300" />
+                  </motion.div>
+                  <div>
+                    <h4 className="font-bold text-lg">Uu dai dac biet</h4>
+                    <p className="text-white/80 text-sm">Giam ngay 20% hoc phi cho 50 khach hang dau tien!</p>
+                  </div>
+              </motion.div>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, type: 'spring', stiffness: 80 }}>
+              <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100">
+                <AnimatePresence mode="wait">
+                  {isSuccess ? (
+                    <motion.div key="success" initial={{ opacity: 0, scale: 0.5, rotate: -10 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={{ opacity: 0, scale: 0.5, rotate: 10 }} transition={{ type: 'spring', stiffness: 200 }} className="text-center py-12">
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 300 }}>
+                        <CheckCircle2 className="w-20 h-20 text-teal-500 mx-auto mb-6" />
+                      </motion.div>
+                      <motion.h3 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-2xl font-bold text-slate-800 mb-2">Gui thanh cong!</motion.h3>
+                      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-slate-500 mb-6">Cam on ban da quan tam. Chung toi se lien he som.</motion.p>
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+                        <Button onClick={() => setIsSuccess(false)} variant="secondary">Gui yeu cau khac</Button>
+                      </motion.div>
+                    </motion.div>
+                  ) : (
+                    <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
+                          <label className="block text-sm font-medium text-slate-700 mb-1.5"><User className="w-4 h-4 inline mr-1 text-slate-400" /> Ho ten phu huynh</label>
+                          <input {...register('parentName')} placeholder="Nguyen Van A" className={inputClass(errors.parentName)} />
+                          {errors.parentName && <p className="mt-1 text-sm text-coral-600">{errors.parentName.message}</p>}
+                        </motion.div>
+                        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }}>
+                          <label className="block text-sm font-medium text-slate-700 mb-1.5"><Baby className="w-4 h-4 inline mr-1 text-slate-400" /> Ten con</label>
+                          <input {...register('childName')} placeholder="Be Minh" className={inputClass(errors.childName)} />
+                          {errors.childName && <p className="mt-1 text-sm text-coral-600">{errors.childName.message}</p>}
+                        </motion.div>
+                      </div>
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5"><Mail className="w-4 h-4 inline mr-1 text-slate-400" /> Email</label>
+                        <input {...register('email')} type="email" placeholder="example@email.com" className={inputClass(errors.email)} />
+                        {errors.email && <p className="mt-1 text-sm text-coral-600">{errors.email.message}</p>}
+                      </motion.div>
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.25 }}>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5"><Phone className="w-4 h-4 inline mr-1 text-slate-400" /> So dien thoai</label>
+                        <input {...register('phone')} type="tel" placeholder="0123456789" className={inputClass(errors.phone)} />
+                        {errors.phone && <p className="mt-1 text-sm text-coral-600">{errors.phone.message}</p>}
+                      </motion.div>
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5"><MessageSquare className="w-4 h-4 inline mr-1 text-slate-400" /> Noi dung tu van</label>
+                        <textarea {...register('message')} rows="4" placeholder="Do tuoi cua con va khoa hoc ban quan tam..." className={inputClass(errors.message) + ' resize-none'} />
+                        {errors.message && <p className="mt-1 text-sm text-coral-600">{errors.message.message}</p>}
+                      </motion.div>
+                      {error && <div className="bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-xl text-sm">{error}</div>}
+                      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.35 }}>
+                        <Button type="submit" disabled={isLoading} className="w-full" variant="gradientTeal" size="lg">
+                          {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Dang gui...</> : <><Send className="w-5 h-5" /> Gui yeu cau tu van</>}
+                        </Button>
+                      </motion.div>
+                      <p className="text-xs text-slate-400 text-center">Bang cach gui form, ban dong y voi chinh sach bao mat</p>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </div>
+      </div>
+    </section>
+  );
+};
+`;
+
+fs.writeFileSync('src/features/Home/components/ContactForm.jsx', contact);
+console.log('ContactForm done');
+
+const reg = `import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { motion } from 'framer-motion';
+import { CheckCircle, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Input } from '../../../components/Input';
+import { Button } from '../../../components/Button';
+
+const schema = z.object({
+  fullName: z.string().min(1, 'Vui long nhap ho ten').min(2, 'Toi thieu 2 ky tu'),
+  email: z.string().optional().refine(val => !val || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(val), { message: 'Email khong hop le' }),
+  phone: z.string().min(1, 'Vui long nhap SDT').regex(/^[0-9]{10}$/, 'SDT phai co 10 chu so')
+});
+
+export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { fullName: '', email: '', phone: '' }
+  });
+
+  const onSubmit = async (data) => {
+    setIsLoading(true); setError(null);
+    try {
+      const API_URL = process.env.NODE_ENV === 'production' ? 'https://your-backend-url.com/api/registrations' : 'http://localhost:5000/api/registrations';
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, courseId: selectedCourse?.id, courseName: selectedCourse?.title })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Loi');
+      setIsSuccess(true); reset();
+      setTimeout(() => { setIsSuccess(false); onSuccess?.(); }, 2000);
+    } catch (err) {
+      setError(err.message === 'Failed to fetch' ? 'Backend chua duoc deploy.' : (err.message || 'Loi'));
+    } finally { setIsLoading(false); }
+  };
+
+  if (isSuccess) {
+    return (
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
+        <CheckCircle className="w-16 h-16 text-teal-500 mx-auto mb-4" />
+        <h3 className="text-xl font-bold text-slate-800 mb-2">Dang ky thanh cong!</h3>
+        <p className="text-slate-500">Chung toi se lien he som.</p>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input label="Ho ten" {...register('fullName')} error={errors.fullName?.message} placeholder="Nguyen Van A" />
+      <Input label="Email (tuy chon)" {...register('email')} type="email" error={errors.email?.message} placeholder="example@email.com" />
+      <Input label="So dien thoai" {...register('phone')} type="tel" error={errors.phone?.message} placeholder="0123456789" />
+      {error && <div className="bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-xl text-sm">{error}</div>}
+      <Button type="submit" disabled={isLoading} className="w-full" variant="gradientTeal">
+        {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Dang xu ly...</> : 'Dang ky ngay'}
+      </Button>
+    </form>
+  );
+};
+`;
+
+fs.writeFileSync('src/features/Home/components/RegistrationForm.jsx', reg);
+console.log('RegistrationForm done');
+console.log('All components fixed!');

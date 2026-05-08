@@ -13,19 +13,20 @@ const createSchema = (t) => z.object({
     .min(1, t('registration.errors.fullNameRequired'))
     .min(2, t('registration.errors.fullNameMin')),
   email: z.string()
-    .min(1, t('registration.errors.emailRequired'))
-    .email(t('registration.errors.emailInvalid')),
+    .optional()
+    .refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: t('registration.errors.emailInvalid')
+    }),
   phone: z.string()
     .min(1, t('registration.errors.phoneRequired'))
-    .regex(/^[0-9]{10}$/, t('registration.errors.phoneInvalid')),
-  course: z.string()
-    .min(1, t('registration.errors.courseRequired'))
+    .regex(/^[0-9]{10}$/, t('registration.errors.phoneInvalid'))
 });
 
 export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
   
   const {
     register,
@@ -37,26 +38,57 @@ export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
     defaultValues: {
       fullName: '',
       email: '',
-      phone: '',
-      course: selectedCourse?.title || ''
+      phone: ''
     }
   });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+    setError(null);
     
-    // Giả lập loading
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const API_URL = process.env.NODE_ENV === 'production'
+        ? 'https://your-backend-url.com/api/registrations'
+        : 'http://localhost:5000/api/registrations';
+
+      const dataToSend = {
+        fullName: data.fullName,
+        email: data.email || null,
+        phone: data.phone.replace(/\s/g, ''),
+        courseId: selectedCourse?.courseId || selectedCourse?.id
+      };
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Có lỗi xảy ra, vui lòng thử lại');
+      }
+
       setIsSuccess(true);
       reset();
       
-      // Tự động đóng modal sau 2 giây
       setTimeout(() => {
         setIsSuccess(false);
         onSuccess?.();
       }, 2000);
-    }, 1500);
+
+    } catch (err) {
+      if (err.message === 'Failed to fetch') {
+        setError('Backend chưa được deploy. Vui lòng liên hệ: contact@eduplatform.vn hoặc 1900 xxxx');
+      } else {
+        setError(err.message || 'Có lỗi xảy ra, vui lòng thử lại sau');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {
@@ -92,6 +124,28 @@ export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
         <p className="text-gray-600">{t('registration.subtitle')}</p>
       </div>
 
+      {/* Hiển thị khóa học đã chọn */}
+      {selectedCourse && (
+        <div className="bg-gradient-to-r from-gold-50 to-purple-50 rounded-xl p-4 border-2 border-gold-200">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t('registration.course')}
+          </label>
+          <div className="flex items-center gap-3">
+            {selectedCourse.image && (
+              <img 
+                src={selectedCourse.image} 
+                alt={selectedCourse.title}
+                className="w-16 h-16 rounded-lg object-cover"
+              />
+            )}
+            <div className="flex-1">
+              <h4 className="font-bold text-gray-800">{selectedCourse.title}</h4>
+              <p className="text-sm text-gold-600 font-semibold">{selectedCourse.price}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Input
         label={t('registration.fullName')}
         placeholder="Nguyễn Văn A"
@@ -102,7 +156,7 @@ export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
       <Input
         label={t('registration.email')}
         type="email"
-        placeholder="example@email.com"
+        placeholder="example@email.com (không bắt buộc)"
         {...register('email')}
         error={errors.email?.message}
       />
@@ -115,31 +169,11 @@ export const RegistrationForm = ({ selectedCourse, onSuccess }) => {
         error={errors.phone?.message}
       />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t('registration.course')}
-        </label>
-        <select
-          {...register('course')}
-          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
-            ${errors.course 
-              ? 'border-red-400 focus:border-red-500' 
-              : 'border-gray-200 focus:border-pastel-pink-500'
-            }
-            focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
-        >
-          <option value="">{t('registration.selectCourse')}</option>
-          <option value="Lập trình Web Frontend">Lập trình Web Frontend</option>
-          <option value="Digital Marketing">Digital Marketing</option>
-          <option value="UI/UX Design">UI/UX Design</option>
-          <option value="Data Science & AI">Data Science & AI</option>
-          <option value="Mobile App Development">Mobile App Development</option>
-          <option value="Tiếng Anh Giao Tiếp">Tiếng Anh Giao Tiếp</option>
-        </select>
-        {errors.course && (
-          <p className="mt-1 text-sm text-red-500">{errors.course.message}</p>
-        )}
-      </div>
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm">
+          {error}
+        </div>
+      )}
 
       <Button
         type="submit"

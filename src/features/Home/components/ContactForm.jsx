@@ -53,8 +53,13 @@ export const ContactForm = () => {
     setError(null);
 
     try {
-      // Gọi API backend
-      const response = await fetch('http://localhost:5000/api/contact', {
+      // TODO: Thay đổi URL này thành API endpoint thực tế khi deploy backend
+      // Ví dụ: https://your-backend.herokuapp.com/api/contact
+      const API_URL = process.env.NODE_ENV === 'production' 
+        ? 'https://your-backend-url.com/api/contact' // Thay URL này khi có backend
+        : 'http://localhost:5000/api/contact';
+
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,8 +90,8 @@ export const ContactForm = () => {
 
     } catch (err) {
       // Xử lý lỗi khi không kết nối được backend
-      if (err.message === 'Failed to fetch') {
-        setError('Không thể kết nối đến server. Vui lòng kiểm tra backend đang chạy.');
+if (err.message === 'Failed to fetch') {
+        setError('Backend chưa được deploy. Vui lòng liên hệ: contact@leoeducation.vn hoặc 1900 xxxx');
       } else {
         setError(err.message || 'Có lỗi xảy ra, vui lòng thử lại sau');
       }
@@ -96,9 +101,9 @@ export const ContactForm = () => {
   };
 
   return (
-    <section id="contact-form" className="py-20 bg-gradient-to-br from-pastel-pink-50 via-white to-purple-50 relative overflow-hidden">
+<section id="contact-form" className="py-20 bg-white dark:bg-gray-950 relative overflow-hidden transition-colors duration-200">
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-pastel-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-navy-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -117,13 +122,13 @@ export const ContactForm = () => {
               transition={{ duration: 0.5 }}
               className="inline-block mb-4"
             >
-              <span className="px-4 py-2 bg-gradient-to-r from-pastel-pink-100 to-purple-100 text-pastel-pink-700 rounded-full text-sm font-semibold">
+<span className="px-4 py-2 bg-gradient-to-r from-gold-100 to-purple-100 text-navy-700 rounded-full text-sm font-semibold flex items-center gap-2">
                 📞 Liên Hệ Tư Vấn
               </span>
             </motion.div>
 
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="text-gradient">Đăng Ký Tư Vấn Miễn Phí</span>
+<h2 className="text-4xl md:text-5xl font-bold mb-4">
+<span className="text-gradient">Đăng Ký Tư Vấn Miễn Phí</span><br/>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Để lại thông tin, chúng tôi sẽ liên hệ tư vấn chi tiết về khóa học phù hợp cho con bạn
@@ -139,7 +144,7 @@ export const ContactForm = () => {
               transition={{ duration: 0.6 }}
               className="space-y-6"
             >
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+<div className="bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-slate-100 dark:border-gray-800">
                 <h3 className="text-2xl font-bold text-gray-800 mb-6">
                   Tại sao chọn chúng tôi?
                 </h3>
@@ -157,7 +162,7 @@ export const ContactForm = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-start gap-4 p-4 rounded-xl hover:bg-pastel-pink-50 transition-colors"
+                      className="flex items-start gap-4 p-4 rounded-xl hover:bg-navy-50 transition-colors"
                     >
                       <span className="text-3xl">{item.icon}</span>
                       <div>
@@ -169,7 +174,7 @@ export const ContactForm = () => {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-pastel-pink-500 to-purple-600 rounded-2xl p-6 text-white">
+<div className="bg-gradient-to-br from-teal-600 to-teal-700 dark:from-teal-600 dark:to-gold-700 rounded-2xl p-6 text-white">
                 <h4 className="font-bold text-lg mb-2">🎁 Ưu đãi đặc biệt</h4>
                 <p className="text-white/90">
                   Giảm ngay 20% học phí cho 50 khách hàng đăng ký đầu tiên trong tháng này!
@@ -184,7 +189,7 @@ export const ContactForm = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="bg-white rounded-3xl p-8 shadow-2xl">
+<div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-2xl border border-slate-100 dark:border-gray-800">
                 {isSuccess ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -222,9 +227,9 @@ export const ContactForm = () => {
                           className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
                             ${errors.parentName 
                               ? 'border-red-400 focus:border-red-500' 
-                              : 'border-gray-200 focus:border-pastel-pink-500'
+                              : 'border-gray-200 focus:border-navy-500'
                             }
-                            focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
+                            focus:outline-none focus:ring-2 focus:ring-navy-200`}
                         />
                         {errors.parentName && (
                           <p className="mt-1 text-sm text-red-500">{errors.parentName.message}</p>
@@ -242,9 +247,9 @@ export const ContactForm = () => {
                           className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
                             ${errors.childName 
                               ? 'border-red-400 focus:border-red-500' 
-                              : 'border-gray-200 focus:border-pastel-pink-500'
+                              : 'border-gray-200 focus:border-navy-500'
                             }
-                            focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
+                            focus:outline-none focus:ring-2 focus:ring-navy-200`}
                         />
                         {errors.childName && (
                           <p className="mt-1 text-sm text-red-500">{errors.childName.message}</p>
@@ -264,9 +269,9 @@ export const ContactForm = () => {
                         className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
                           ${errors.email 
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-gray-200 focus:border-pastel-pink-500'
+                            : 'border-gray-200 focus:border-navy-500'
                           }
-                          focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
+                          focus:outline-none focus:ring-2 focus:ring-navy-200`}
                       />
                       {errors.email && (
                         <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
@@ -285,9 +290,9 @@ export const ContactForm = () => {
                         className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
                           ${errors.phone 
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-gray-200 focus:border-pastel-pink-500'
+                            : 'border-gray-200 focus:border-navy-500'
                           }
-                          focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
+                          focus:outline-none focus:ring-2 focus:ring-navy-200`}
                       />
                       {errors.phone && (
                         <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
@@ -306,9 +311,9 @@ export const ContactForm = () => {
                         className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 resize-none
                           ${errors.message 
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-gray-200 focus:border-pastel-pink-500'
+                            : 'border-gray-200 focus:border-navy-500'
                           }
-                          focus:outline-none focus:ring-2 focus:ring-pastel-pink-200`}
+                          focus:outline-none focus:ring-2 focus:ring-navy-200`}
                       />
                       {errors.message && (
                         <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>
